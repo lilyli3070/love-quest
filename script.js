@@ -1,6 +1,5 @@
 
 document.addEventListener("DOMContentLoaded", function () {
-
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
@@ -40,13 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   const player = { x: 2, y: 2 };
+  const isis = { x: 9, y: 7 };
 
   const playerAnimation = {
     direction: "down",
     frame: 0
   };
-
-  const isis = { x: 9, y: 7 };
 
   const memories = [
     {
@@ -88,6 +86,47 @@ document.addEventListener("DOMContentLoaded", function () {
   let gameStarted = false;
   let dialogueOpen = false;
   let dialogueCallback = null;
+  let inGarden = false;
+  let gardenUnlocked = false;
+  let quizIndex = 0;
+
+  // Creamos el espacio donde aparecerán las respuestas.
+  const answerContainer = document.createElement("div");
+  answerContainer.style.display = "flex";
+  answerContainer.style.flexDirection = "column";
+  answerContainer.style.gap = "10px";
+  answerContainer.style.marginTop = "16px";
+  dialogue.appendChild(answerContainer);
+
+  const questions = [
+    {
+      question: "🐶 ¿Cuándo cumple Kira?",
+      answers: [
+        "El 20 de mayo",
+        "El 20 de junio",
+        "No tiene cumpleaños"
+      ],
+      correct: 1
+    },
+    {
+      question: "🎁 ¿Cuál fue el primer regalo hecho a mano que te hice?",
+      answers: [
+        "Una carta romántica",
+        "Un tarro con un Spider-Man",
+        "Una carta con dibujos"
+      ],
+      correct: 1
+    },
+    {
+      question: "🍰 ¿Cuál es mi postre favorito?",
+      answers: [
+        "Coulant",
+        "Tiramisú",
+        "Brownie"
+      ],
+      correct: 0
+    }
+  ];
 
   function isWall(x, y) {
     return (
@@ -100,7 +139,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateCounter() {
-    memoryCounter.textContent = `RECUERDOS: ${collected.size}/4`;
+    memoryCounter.textContent =
+      `RECUERDOS: ${collected.size}/4`;
   }
 
   function drawBoy(x, y) {
@@ -125,9 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillStyle = "#fff7f1";
     ctx.fillRect(px + 7, py + 23, 18, 5);
 
-    // Piernas animadas
+    // Piernas
     ctx.fillStyle = "#21152f";
-
     const step = playerAnimation.frame === 0 ? 0 : 2;
 
     ctx.fillRect(px + 8, py + 28 + step, 7, 4 - step);
@@ -163,27 +202,19 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillRect(px + 17, py + 28, 6, 4);
   }
 
-  function drawWorld() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Suelo y árboles
+  function drawTreesAndGrass() {
     for (let y = 0; y < ROWS; y++) {
       for (let x = 0; x < COLS; x++) {
-
         if (map[y][x] === "#") {
-          // Tronco
           ctx.fillStyle = "#493b35";
           ctx.fillRect(x * TILE + 12, y * TILE + 19, 9, 13);
 
-          // Copa del árbol
           ctx.fillStyle = "#286044";
           ctx.fillRect(x * TILE + 3, y * TILE + 5, 26, 20);
 
           ctx.fillStyle = "#397c50";
           ctx.fillRect(x * TILE + 8, y * TILE + 1, 17, 13);
-
         } else {
-          // Césped
           ctx.fillStyle = (x + y) % 2 === 0
             ? "#91c879"
             : "#88bd70";
@@ -192,6 +223,95 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
+  }
+
+  function drawFlowers(flowers) {
+    flowers.forEach(([x, y, color]) => {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * TILE + 9, y * TILE + 10, 5, 5);
+      ctx.fillRect(x * TILE + 18, y * TILE + 10, 5, 5);
+
+      ctx.fillStyle = "#fff7d1";
+      ctx.fillRect(x * TILE + 14, y * TILE + 14, 5, 5);
+
+      ctx.fillStyle = "#397c50";
+      ctx.fillRect(x * TILE + 15, y * TILE + 19, 3, 6);
+    });
+  }
+
+  function drawGarden() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Césped del jardín secreto
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        ctx.fillStyle = (x + y) % 2 === 0
+          ? "#a4d98a"
+          : "#96cf7d";
+
+        ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
+      }
+    }
+
+    // Borde de arbustos
+    for (let x = 0; x < COLS; x++) {
+      ctx.fillStyle = "#286044";
+      ctx.fillRect(x * TILE, 0, TILE, TILE);
+      ctx.fillRect(x * TILE, 14 * TILE, TILE, TILE);
+    }
+
+    for (let y = 0; y < ROWS; y++) {
+      ctx.fillStyle = "#286044";
+      ctx.fillRect(0, y * TILE, TILE, TILE);
+      ctx.fillRect(19 * TILE, y * TILE, TILE, TILE);
+    }
+
+    // Caminito de flores
+    for (let x = 2; x < 18; x++) {
+      ctx.fillStyle = "#e7c9a4";
+      ctx.fillRect(x * TILE + 5, 7 * TILE + 10, 22, 13);
+    }
+
+    const gardenFlowers = [
+      [3, 3, "#ff8fba"],
+      [5, 5, "#fff0a6"],
+      [7, 10, "#f5a6e8"],
+      [11, 3, "#ff8fba"],
+      [13, 5, "#fff0a6"],
+      [16, 3, "#f5a6e8"],
+      [4, 11, "#fff0a6"],
+      [8, 12, "#ff8fba"],
+      [14, 11, "#f5a6e8"],
+      [17, 10, "#fff0a6"]
+    ];
+
+    drawFlowers(gardenFlowers);
+
+    // Corazones decorativos
+    ctx.font = "24px serif";
+    ctx.textAlign = "center";
+    ctx.fillText("💗", 7 * TILE + 16, 5 * TILE + 24);
+    ctx.fillText("🌷", 13 * TILE + 16, 10 * TILE + 24);
+    ctx.fillText("✨", 16 * TILE + 16, 5 * TILE + 24);
+
+    // Puerta de salida
+    ctx.fillStyle = "#8b526e";
+    ctx.fillRect(TILE + 5, 7 * TILE + 3, 22, 27);
+    ctx.fillStyle = "#ffd6ec";
+    ctx.fillRect(TILE + 11, 7 * TILE + 9, 10, 15);
+
+    drawGirl(14, 7);
+    drawBoy(player.x, player.y);
+  }
+
+  function drawWorld() {
+    if (inGarden) {
+      drawGarden();
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawTreesAndGrass();
 
     // Caminos de tierra
     for (let x = 2; x <= 17; x++) {
@@ -204,7 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillRect(9 * TILE + 5, y * TILE + 9, 22, 15);
     }
 
-    // Flores
     const flowers = [
       [2, 5, "#ff8fba"],
       [5, 3, "#fff0a6"],
@@ -217,17 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
       [3, 13, "#fff0a6"]
     ];
 
-    flowers.forEach(([x, y, color]) => {
-      ctx.fillStyle = color;
-      ctx.fillRect(x * TILE + 9, y * TILE + 10, 5, 5);
-      ctx.fillRect(x * TILE + 18, y * TILE + 10, 5, 5);
-
-      ctx.fillStyle = "#fff7d1";
-      ctx.fillRect(x * TILE + 14, y * TILE + 14, 5, 5);
-
-      ctx.fillStyle = "#397c50";
-      ctx.fillRect(x * TILE + 15, y * TILE + 19, 3, 6);
-    });
+    drawFlowers(flowers);
 
     // Recuerdos
     memories.forEach(memory => {
@@ -245,6 +354,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // Isis
     drawGirl(isis.x, isis.y);
 
+    // Puerta del jardín secreto
+    ctx.fillStyle = gardenUnlocked ? "#e5a3d0" : "#75415f";
+    ctx.fillRect(17 * TILE + 4, 7 * TILE + 3, 24, 29);
+
+    ctx.fillStyle = "#fff0fa";
+    ctx.font = "19px serif";
+    ctx.textAlign = "center";
+    ctx.fillText(
+      gardenUnlocked ? "♥" : "🔒",
+      17 * TILE + 16,
+      7 * TILE + 23
+    );
+
     // Portal final
     if (collected.size === memories.length) {
       ctx.fillStyle = "#ff7ac5";
@@ -254,13 +376,19 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillRect(17 * TILE + 10, 12 * TILE + 9, 12, 15);
     }
 
-    // Iker
     drawBoy(player.x, player.y);
   }
 
   function showDialogue(title, text, callback) {
     dialogueTitle.textContent = title;
     dialogueText.textContent = text;
+
+    answerContainer.replaceChildren();
+    answerContainer.style.display = "none";
+
+    dialogueButton.hidden = false;
+    dialogueButton.textContent = "CONTINUAR";
+
     dialogue.hidden = false;
     dialogueOpen = true;
     dialogueCallback = callback || null;
@@ -269,12 +397,100 @@ document.addEventListener("DOMContentLoaded", function () {
   function closeDialogue() {
     dialogue.hidden = true;
     dialogueOpen = false;
+    answerContainer.replaceChildren();
 
     if (dialogueCallback) {
       const callback = dialogueCallback;
       dialogueCallback = null;
       callback();
     }
+  }
+
+  function showQuestion() {
+    const current = questions[quizIndex];
+
+    dialogueTitle.textContent =
+      `🔐 PREGUNTA ${quizIndex + 1} DE 3`;
+
+    dialogueText.textContent = current.question;
+
+    dialogueButton.hidden = true;
+    answerContainer.replaceChildren();
+    answerContainer.style.display = "flex";
+
+    current.answers.forEach((answer, index) => {
+      const button = document.createElement("button");
+
+      button.type = "button";
+      button.textContent = answer;
+      button.style.padding = "12px";
+      button.style.border = "2px solid #ffacd9";
+      button.style.background = "#382344";
+      button.style.color = "#fff0fa";
+      button.style.font = "inherit";
+      button.style.cursor = "pointer";
+      button.style.borderRadius = "8px";
+
+      button.addEventListener("click", function () {
+        if (index === current.correct) {
+          quizIndex++;
+
+          if (quizIndex === questions.length) {
+            gardenUnlocked = true;
+
+            answerContainer.replaceChildren();
+            answerContainer.style.display = "none";
+
+            dialogueTitle.textContent = "🌷 ¡JARDÍN DESBLOQUEADO!";
+            dialogueText.textContent =
+              "¡Has acertado las tres preguntas! La puerta se ha abierto. Bienvenido a vuestro jardín secreto, Iker. 💗";
+
+            dialogueButton.hidden = false;
+            dialogueButton.textContent = "ENTRAR AL JARDÍN ♥";
+            dialogueCallback = function () {
+              enterGarden();
+            };
+          } else {
+            showQuestion();
+          }
+        } else {
+          dialogueText.textContent =
+            "¡Uy! Esa no es la respuesta. ¡Inténtalo otra vez! 💗";
+        }
+      });
+
+      answerContainer.appendChild(button);
+    });
+  }
+
+  function startQuiz() {
+    quizIndex = 0;
+    dialogueOpen = true;
+    dialogue.hidden = false;
+    dialogueCallback = null;
+    showQuestion();
+  }
+
+  function enterGarden() {
+    inGarden = true;
+    player.x = 2;
+    player.y = 7;
+
+    gameMessage.textContent =
+      "🌷 Has entrado en vuestro jardín secreto. Explora y disfruta.";
+
+    drawWorld();
+  }
+
+  function leaveGarden() {
+    inGarden = false;
+    player.x = 16;
+    player.y = 7;
+
+    gameMessage.textContent =
+      "Has vuelto al bosque. ¡Sigue explorando! 💗";
+
+    drawWorld();
   }
 
   function collectMemory(memory) {
@@ -299,7 +515,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const newX = player.x + dx;
     const newY = player.y + dy;
 
-    if (isWall(newX, newY)) return;
+    if (inGarden) {
+      if (newX < 1 || newY < 1 || newX > 18 || newY > 13) {
+        return;
+      }
+    } else if (isWall(newX, newY)) {
+      return;
+    }
 
     if (dx > 0) playerAnimation.direction = "right";
     else if (dx < 0) playerAnimation.direction = "left";
@@ -311,15 +533,17 @@ document.addEventListener("DOMContentLoaded", function () {
     player.x = newX;
     player.y = newY;
 
-    const lemon = memories.find(memory => memory.id === "lemon");
+    if (!inGarden) {
+      const lemon = memories.find(memory => memory.id === "lemon");
 
-    if (
-      lemon &&
-      !collected.has(lemon.id) &&
-      player.x === lemon.x &&
-      player.y === lemon.y
-    ) {
-      collectMemory(lemon);
+      if (
+        lemon &&
+        !collected.has(lemon.id) &&
+        player.x === lemon.x &&
+        player.y === lemon.y
+      ) {
+        collectMemory(lemon);
+      }
     }
 
     drawWorld();
@@ -327,6 +551,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function interact() {
     if (!gameStarted || dialogueOpen) return;
+
+    if (inGarden) {
+      const exitDistance =
+        Math.abs(player.x - 1) + Math.abs(player.y - 7);
+
+      if (exitDistance <= 1) {
+        leaveGarden();
+      } else {
+        gameMessage.textContent =
+          "Explora vuestro jardín secreto. 🌷";
+      }
+      return;
+    }
 
     const memory = memories.find(memory => {
       if (collected.has(memory.id)) return false;
@@ -355,6 +592,18 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    const distanceToGarden =
+      Math.abs(player.x - 17) + Math.abs(player.y - 7);
+
+    if (distanceToGarden <= 1) {
+      if (!gardenUnlocked) {
+        startQuiz();
+      } else {
+        enterGarden();
+      }
+      return;
+    }
+
     const distanceToPortal =
       Math.abs(player.x - 17) + Math.abs(player.y - 12);
 
@@ -365,7 +614,7 @@ document.addEventListener("DOMContentLoaded", function () {
       showDialogue(
         "❤️ EL FINAL DE ESTA AVENTURA",
         "Para mi Amor, para Iker. Gracias por cada recuerdo, cada risa y cada momento compartido. Con cariño, Isis. Esta historia todavía tiene muchos capítulos por escribir. Te quiero 3000. 💗",
-        () => {
+        function () {
           gameMessage.textContent = "¡AVENTURA COMPLETADA!";
         }
       );
@@ -378,6 +627,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function startGame() {
     gameStarted = true;
+    inGarden = false;
     player.x = 2;
     player.y = 2;
 
@@ -385,6 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
     playerAnimation.frame = 0;
 
     collected.clear();
+    gardenUnlocked = false;
     updateCounter();
 
     startScreen.hidden = true;
@@ -446,5 +697,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
   updateCounter();
   drawWorld();
-
 });
