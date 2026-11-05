@@ -26,9 +26,14 @@ const scenes = [
     button: "JAJA, CONTINUAR"
   },
   {
-    title: "❤️ VUESTRA HISTORIA",
-    text: "Entre películas, Minecraft, Naruto, familia, risas y momentos difíciles, habéis aprendido y crecido juntos. Y vuestra aventura todavía continúa.",
-    button: "SEGUIR NUESTRA HISTORIA"
+    title: "🍥 MISIÓN NARUTO",
+    text: "Una aventura de anime, películas y momentos compartidos. Isis empezó a descubrir Naruto, el anime favorito de Iker.",
+    button: "CONTINUAR"
+  },
+  {
+    title: "❤️ NUESTRA HISTORIA",
+    text: "Entre películas, Minecraft, familia, risas y momentos difíciles, habéis aprendido y crecido juntos. Vuestra historia todavía continúa.",
+    button: "CONTINUAR"
   }
 ];
 
@@ -36,11 +41,13 @@ function showScene() {
   const scene = scenes[currentStep];
 
   screen.innerHTML = `
-    <div class="scene">
-      <h1>${scene.title}</h1>
-      <p>${scene.text}</p>
-      <button id="nextButton">${scene.button}</button>
-    </div>
+    <div class="pixel-heart">♥</div>
+    <p class="subtitle">LOVE QUEST · NIVEL ${currentStep + 1}</p>
+    <h1>${scene.title}</h1>
+    <p class="intro">${scene.text}</p>
+    <div class="pixel-character">♡</div>
+    <button id="nextButton">${scene.button}</button>
+    <p class="footer">PLAYER 1 · ISIS & IKER</p>
   `;
 
   document.getElementById("nextButton").addEventListener("click", () => {
@@ -50,12 +57,15 @@ function showScene() {
       showScene();
     } else {
       screen.innerHTML = `
-        <div class="scene">
-          <h1>💗 TO BE CONTINUED...</h1>
-          <p>Para mi Amor, para mi Cuchi, para Iker.</p>
-          <p>Con cariño, tu gabacha, Isis.</p>
-          <p>Esta historia todavía tiene muchos capítulos por escribir.</p>
-        </div>
+        <div class="pixel-heart">♥</div>
+        <h1>TO BE CONTINUED...</h1>
+        <p class="intro">
+          Para mi Amor, para mi Cuchi, para Iker.
+          <br><br>
+          Con cariño, tu gabacha, Isis.
+          <br><br>
+          Esta historia todavía tiene muchos capítulos por escribir. 💗
+        </p>
       `;
     }
   });
