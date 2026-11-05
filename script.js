@@ -101,12 +101,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const questions = [
     {
       question: "🐶 ¿Cuándo cumple Kira?",
-      answers: [
+     answers: [
   "El 20 de mayo",
   "El 20 de junio",
   "No tiene cumpleaños"
 ],
-correct: 1
+correct: 0
     },
     {
       question: "🎁 ¿Cuál fue el primer regalo hecho a mano que te hice?",
