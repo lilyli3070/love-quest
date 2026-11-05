@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
       y: 10,
       emoji: "⛏️",
       title: "MISIÓN CREEPER",
-      text: "¡A UN CREEPER! Isis gritó la advertencia en Minecraft, pero se quedó quieta. ¡Y el creeper ganó! 😂"
+      text: "¡A UN CREEPER! Isis gritó en Minecraft, pero se quedó quieta. ¡Y el creeper ganó! "
     },
     {
       id: "naruto",
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
       showDialogue(
         "❤️ EL FINAL DE ESTA AVENTURA",
-        "Para mi Amor, para mi Cuchi, para Iker. Gracias por cada recuerdo, cada risa y cada momento compartido. Con cariño, tu gabacha, Isis. Esta historia todavía tiene muchos capítulos por escribir. Te quiero 3000. 💗",
+        "Para mi Amor, para Iker. Gracias por cada recuerdo, cada risa y cada momento compartido. Con cariño, Isis. Esta historia todavía tiene muchos capítulos por escribir. Te quiero 3000. 💗",
         () => {
           gameMessage.textContent = "¡AVENTURA COMPLETADA!";
         }
