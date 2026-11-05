@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;800&display=swap');
 
 * {
   box-sizing: border-box;
@@ -6,88 +7,187 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #171329;
-  color: #fff0fa;
-  font-family: "Courier New", monospace;
+  padding: 20px 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  background: #21152f;
+  color: #fff0fa;
+  font-family: 'Nunito', sans-serif;
 }
 
 #game {
   width: 100%;
-  max-width: 650px;
-  min-height: 520px;
-  background: #292044;
-  border: 5px solid #f58acb;
-  box-shadow: 0 0 0 5px #754b91;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  max-width: 760px;
+}
+
+.panel {
+  padding: 24px;
   text-align: center;
-  padding: 30px 15px;
+  background: #38234d;
+  border: 5px solid #f6a6d5;
+  box-shadow: 8px 8px 0 #120d1c;
 }
 
-.screen {
-  width: 100%;
+[hidden] {
+  display: none !important;
 }
 
-.pixel-heart {
-  color: #ff80c8;
-  font-size: 65px;
-  text-shadow: 4px 4px #9e367e;
-  animation: float 1.5s infinite alternate;
+.big-heart {
+  color: #ff83c5;
+  font-size: 54px;
+  text-shadow: 4px 4px #a83e83;
 }
 
-.subtitle {
-  color: #c5a5ff;
-  letter-spacing: 3px;
-  font-size: 12px;
-}
-
-h1 {
-  color: #ff9ed8;
-  font-size: clamp(30px, 8vw, 55px);
-  text-shadow: 4px 4px #813e85;
-  margin: 25px 0;
-}
-
-.intro {
-  color: #f6d8ef;
+.subtitle,
+.footer,
+.game-header,
+.controls-hint {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
   line-height: 1.8;
 }
 
-.pixel-character {
-  font-size: 75px;
-  color: #ff9ed8;
-  margin: 25px;
+h1 {
+  margin: 22px 0;
+  color: #ffacd9;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(23px, 6vw, 38px);
+  line-height: 1.5;
+  text-shadow: 4px 4px #a83e83;
+}
+
+p {
+  line-height: 1.7;
+}
+
+.couple {
+  margin: 24px;
+  color: #ffacd9;
+  font-size: 65px;
 }
 
 button {
-  background: #f58acb;
-  color: #29152f;
-  border: 4px solid #fff0fa;
-  padding: 16px 25px;
-  font-family: inherit;
-  font-weight: bold;
-  font-size: 16px;
+  padding: 14px 18px;
+  border: 3px solid #fff0fa;
+  border-radius: 0;
+  background: #ec70b5;
+  color: #29172f;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  line-height: 1.7;
   cursor: pointer;
-  box-shadow: 5px 5px #9e367e;
+  box-shadow: 4px 4px 0 #a83e83;
+  touch-action: manipulation;
 }
 
 button:hover {
-  background: #ffd0eb;
-  transform: translateY(-3px);
+  background: #ffc0e2;
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 #a83e83;
 }
 
 .footer {
-  color: #bba4d9;
-  font-size: 11px;
-  margin-top: 35px;
+  margin-top: 28px;
+  color: #eab4d5;
 }
 
-@keyframes float {
-  from { transform: translateY(0); }
-  to { transform: translateY(-12px); }
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #ffacd9;
+}
+
+.instructions,
+.controls-hint {
+  font-size: 10px;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 14px auto;
+  border: 4px solid #f6a6d5;
+  background: #91c879;
+  image-rendering: pixelated;
+}
+
+.mobile-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.horizontal-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.mobile-controls button {
+  min-width: 54px;
+  min-height: 48px;
+  padding: 8px;
+}
+
+.mobile-controls .interact-button {
+  width: 100%;
+  max-width: 280px;
+  margin-top: 8px;
+}
+
+#gameMessage {
+  min-height: 28px;
+  color: #ffc0e2;
+  font-weight: 800;
+}
+
+.dialogue {
+  margin-top: 16px;
+  padding: 18px;
+  border: 3px solid #ffacd9;
+  background: #241633;
+  text-align: left;
+}
+
+#dialogueTitle {
+  color: #ffacd9;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#dialogueText {
+  line-height: 1.8;
+}
+
+#dialogueButton {
+  display: block;
+  margin: 12px auto 0;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px 6px;
+  }
+
+  .panel {
+    padding: 14px 10px;
+  }
+
+  .game-header {
+    font-size: 8px;
+  }
+
+  .instructions,
+  .controls-hint {
+    font-size: 9px;
+  }
 }
