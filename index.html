@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOVE QUEST 💗</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
 </head>
 <body>
   <main id="game">
@@ -14,7 +15,7 @@
       <h1>LOVE QUEST</h1>
       <p>Una aventura creada con mucho amor...</p>
       <div class="couple">♡</div>
-      <button id="startButton">START GAME ♥</button>
+      <button id="startButton" type="button">START GAME ♥</button>
       <p class="footer">PLAYER 1 · PRESS START</p>
     </section>
 
@@ -25,25 +26,25 @@
       </header>
 
       <p class="instructions">
-        Explora el mapa, encuentra objetos y descubre recuerdos.
+        Explora el mapa y encuentra vuestros recuerdos.
       </p>
 
-      <canvas id="gameCanvas" width="640" height="480">
-        Tu navegador no puede mostrar este juego.
-      </canvas>
+      <canvas id="gameCanvas" width="640" height="480"></canvas>
 
       <p class="controls-hint">
         Mover: flechas o WASD · Interactuar: E o ESPACIO
       </p>
 
       <div class="mobile-controls">
-        <button data-move="up" aria-label="Arriba">▲</button>
+        <button type="button" data-move="up">▲</button>
         <div class="horizontal-controls">
-          <button data-move="left" aria-label="Izquierda">◀</button>
-          <button data-move="down" aria-label="Abajo">▼</button>
-          <button data-move="right" aria-label="Derecha">▶</button>
+          <button type="button" data-move="left">◀</button>
+          <button type="button" data-move="down">▼</button>
+          <button type="button" data-move="right">▶</button>
         </div>
-        <button id="interactButton" class="interact-button">INTERACTUAR ♥</button>
+        <button type="button" id="interactButton" class="interact-button">
+          INTERACTUAR ♥
+        </button>
       </div>
 
       <p id="gameMessage">¡Encuentra el limón! 🍋</p>
@@ -51,11 +52,9 @@
       <div id="dialogue" class="dialogue" hidden>
         <p id="dialogueTitle"></p>
         <p id="dialogueText"></p>
-        <button id="dialogueButton">CONTINUAR</button>
+        <button type="button" id="dialogueButton">CONTINUAR</button>
       </div>
     </section>
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
