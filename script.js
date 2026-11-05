@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
 
   const canvas = document.getElementById("gameCanvas");
@@ -39,6 +40,12 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   const player = { x: 2, y: 2 };
+
+  const playerAnimation = {
+    direction: "down",
+    frame: 0
+  };
+
   const isis = { x: 9, y: 7 };
 
   const memories = [
@@ -64,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
       y: 10,
       emoji: "⛏️",
       title: "MISIÓN CREEPER",
-      text: "¡A UN CREEPER! Isis gritó en Minecraft, pero se quedó quieta. ¡Y el creeper ganó! "
+      text: "¡A UN CREEPER! Isis gritó en Minecraft, pero se quedó quieta. ¡Y el creeper ganó!"
     },
     {
       id: "naruto",
@@ -115,8 +122,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillRect(px + 7, py + 23, 18, 5);
 
     ctx.fillStyle = "#21152f";
-    ctx.fillRect(px + 8, py + 28, 7, 4);
-    ctx.fillRect(px + 17, py + 28, 7, 4);
+
+    const step = playerAnimation.frame === 0 ? 0 : 2;
+
+    ctx.fillRect(px + 8, py + 28 + step, 7, 4 - step);
+    ctx.fillRect(px + 17, py + 28 - step, 7, 4 - step);
   }
 
   function drawGirl(x, y) {
@@ -228,6 +238,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (isWall(newX, newY)) return;
 
+    if (dx > 0) playerAnimation.direction = "right";
+    else if (dx < 0) playerAnimation.direction = "left";
+    else if (dy > 0) playerAnimation.direction = "down";
+    else if (dy < 0) playerAnimation.direction = "up";
+
+    playerAnimation.frame = (playerAnimation.frame + 1) % 2;
+
     player.x = newX;
     player.y = newY;
 
@@ -300,6 +317,8 @@ document.addEventListener("DOMContentLoaded", function () {
     gameStarted = true;
     player.x = 2;
     player.y = 2;
+    playerAnimation.direction = "down";
+    playerAnimation.frame = 0;
     collected.clear();
 
     updateCounter();
