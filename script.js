@@ -153,47 +153,97 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillRect(px + 17, py + 28, 6, 4);
   }
 
-  function drawWorld() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawWorld() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let y = 0; y < ROWS; y++) {
-      for (let x = 0; x < COLS; x++) {
-        if (map[y][x] === "#") {
-          ctx.fillStyle = "#765080";
-          ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
+  // Dibujar el suelo
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      if (map[y][x] === "#") {
+        // Árboles y arbustos
+        ctx.fillStyle = "#493b35";
+        ctx.fillRect(x * TILE + 12, y * TILE + 19, 9, 13);
 
-          ctx.fillStyle = "#9b6ba0";
-          ctx.fillRect(x * TILE, y * TILE, TILE, 7);
-        } else {
-          ctx.fillStyle = (x + y) % 2 === 0 ? "#91c879" : "#88bd70";
-          ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
-        }
+        ctx.fillStyle = "#286044";
+        ctx.fillRect(x * TILE + 3, y * TILE + 5, 26, 20);
+
+        ctx.fillStyle = "#397c50";
+        ctx.fillRect(x * TILE + 8, y * TILE + 1, 17, 13);
+      } else {
+        ctx.fillStyle = (x + y) % 2 === 0
+          ? "#91c879"
+          : "#88bd70";
+
+        ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
       }
     }
-
-    memories.forEach(memory => {
-      if (!collected.has(memory.id)) {
-        ctx.font = "22px serif";
-        ctx.textAlign = "center";
-        ctx.fillText(
-          memory.emoji,
-          memory.x * TILE + 16,
-          memory.y * TILE + 25
-        );
-      }
-    });
-
-    drawGirl(isis.x, isis.y);
-
-    if (collected.size === memories.length) {
-      ctx.fillStyle = "#ff7ac5";
-      ctx.fillRect(17 * TILE + 4, 12 * TILE + 3, 24, 27);
-      ctx.fillStyle = "#fff0fa";
-      ctx.fillRect(17 * TILE + 10, 12 * TILE + 9, 12, 15);
-    }
-
-    drawBoy(player.x, player.y);
   }
+
+  // Caminos de tierra
+  for (let x = 2; x <= 17; x++) {
+    ctx.fillStyle = "#c9a477";
+    ctx.fillRect(x * TILE + 5, 7 * TILE + 9, 22, 15);
+  }
+
+  for (let y = 2; y <= 12; y++) {
+    ctx.fillStyle = "#c9a477";
+    ctx.fillRect(9 * TILE + 5, y * TILE + 9, 22, 15);
+  }
+
+  // Flores del bosque
+  const flowers = [
+    [2, 5, "#ff8fba"],
+    [5, 3, "#fff0a6"],
+    [7, 9, "#f5a6e8"],
+    [12, 2, "#fff0a6"],
+    [17, 5, "#ff8fba"],
+    [6, 12, "#fff0a6"],
+    [12, 12, "#f5a6e8"],
+    [15, 8, "#ff8fba"],
+    [3, 13, "#fff0a6"]
+  ];
+
+  flowers.forEach(([x, y, color]) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x * TILE + 9, y * TILE + 10, 5, 5);
+    ctx.fillRect(x * TILE + 18, y * TILE + 10, 5, 5);
+
+    ctx.fillStyle = "#fff7d1";
+    ctx.fillRect(x * TILE + 14, y * TILE + 14, 5, 5);
+
+    ctx.fillStyle = "#397c50";
+    ctx.fillRect(x * TILE + 15, y * TILE + 19, 3, 6);
+  });
+
+  // Recuerdos que hay que encontrar
+  memories.forEach(memory => {
+    if (!collected.has(memory.id)) {
+      ctx.font = "22px serif";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        memory.emoji,
+        memory.x * TILE + 16,
+        memory.y * TILE + 25
+      );
+    }
+  });
+
+  // Isis
+  drawGirl(isis.x, isis.y);
+
+  // Portal final
+  if (collected.size === memories.length) {
+    ctx.fillStyle = "#ff7ac5";
+    ctx.fillRect(17 * TILE + 4, 12 * TILE + 3, 24, 27);
+
+    ctx.fillStyle = "#fff0fa";
+    ctx.fillRect(17 * TILE + 10, 12 * TILE + 9, 12, 15);
+  }
+
+  // Iker
+  drawBoy(player.x, player.y);
+}
+
 
   function showDialogue(title, text, callback) {
     dialogueTitle.textContent = title;
