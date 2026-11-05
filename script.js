@@ -107,20 +107,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const px = x * TILE;
     const py = y * TILE;
 
+    // Pelo rizado
     ctx.fillStyle = "#17121b";
     ctx.fillRect(px + 8, py + 3, 16, 7);
     ctx.fillRect(px + 5, py + 7, 22, 7);
 
+    // Cara
     ctx.fillStyle = "#713e2b";
     ctx.fillRect(px + 8, py + 11, 16, 12);
 
+    // Ojos
     ctx.fillStyle = "#17121b";
     ctx.fillRect(px + 12, py + 15, 2, 2);
     ctx.fillRect(px + 19, py + 15, 2, 2);
 
+    // Camiseta
     ctx.fillStyle = "#fff7f1";
     ctx.fillRect(px + 7, py + 23, 18, 5);
 
+    // Piernas animadas
     ctx.fillStyle = "#21152f";
 
     const step = playerAnimation.frame === 0 ? 0 : 2;
@@ -133,117 +138,125 @@ document.addEventListener("DOMContentLoaded", function () {
     const px = x * TILE;
     const py = y * TILE;
 
+    // Pelo largo
     ctx.fillStyle = "#30202b";
     ctx.fillRect(px + 6, py + 4, 20, 22);
     ctx.fillRect(px + 4, py + 9, 5, 20);
     ctx.fillRect(px + 23, py + 9, 5, 20);
 
+    // Cara
     ctx.fillStyle = "#edc29d";
     ctx.fillRect(px + 10, py + 10, 12, 12);
 
+    // Ojos
     ctx.fillStyle = "#79502f";
     ctx.fillRect(px + 12, py + 14, 2, 2);
     ctx.fillRect(px + 19, py + 14, 2, 2);
 
+    // Camiseta
     ctx.fillStyle = "#fff7f1";
     ctx.fillRect(px + 8, py + 23, 16, 5);
 
+    // Vaqueros
     ctx.fillStyle = "#426eb3";
     ctx.fillRect(px + 9, py + 28, 6, 4);
     ctx.fillRect(px + 17, py + 28, 6, 4);
   }
 
-function drawWorld() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function drawWorld() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Dibujar el suelo
-  for (let y = 0; y < ROWS; y++) {
-    for (let x = 0; x < COLS; x++) {
-      if (map[y][x] === "#") {
-        // Árboles y arbustos
-        ctx.fillStyle = "#493b35";
-        ctx.fillRect(x * TILE + 12, y * TILE + 19, 9, 13);
+    // Suelo y árboles
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
 
-        ctx.fillStyle = "#286044";
-        ctx.fillRect(x * TILE + 3, y * TILE + 5, 26, 20);
+        if (map[y][x] === "#") {
+          // Tronco
+          ctx.fillStyle = "#493b35";
+          ctx.fillRect(x * TILE + 12, y * TILE + 19, 9, 13);
 
-        ctx.fillStyle = "#397c50";
-        ctx.fillRect(x * TILE + 8, y * TILE + 1, 17, 13);
-      } else {
-        ctx.fillStyle = (x + y) % 2 === 0
-          ? "#91c879"
-          : "#88bd70";
+          // Copa del árbol
+          ctx.fillStyle = "#286044";
+          ctx.fillRect(x * TILE + 3, y * TILE + 5, 26, 20);
 
-        ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
+          ctx.fillStyle = "#397c50";
+          ctx.fillRect(x * TILE + 8, y * TILE + 1, 17, 13);
+
+        } else {
+          // Césped
+          ctx.fillStyle = (x + y) % 2 === 0
+            ? "#91c879"
+            : "#88bd70";
+
+          ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
+        }
       }
     }
-  }
 
-  // Caminos de tierra
-  for (let x = 2; x <= 17; x++) {
-    ctx.fillStyle = "#c9a477";
-    ctx.fillRect(x * TILE + 5, 7 * TILE + 9, 22, 15);
-  }
-
-  for (let y = 2; y <= 12; y++) {
-    ctx.fillStyle = "#c9a477";
-    ctx.fillRect(9 * TILE + 5, y * TILE + 9, 22, 15);
-  }
-
-  // Flores del bosque
-  const flowers = [
-    [2, 5, "#ff8fba"],
-    [5, 3, "#fff0a6"],
-    [7, 9, "#f5a6e8"],
-    [12, 2, "#fff0a6"],
-    [17, 5, "#ff8fba"],
-    [6, 12, "#fff0a6"],
-    [12, 12, "#f5a6e8"],
-    [15, 8, "#ff8fba"],
-    [3, 13, "#fff0a6"]
-  ];
-
-  flowers.forEach(([x, y, color]) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x * TILE + 9, y * TILE + 10, 5, 5);
-    ctx.fillRect(x * TILE + 18, y * TILE + 10, 5, 5);
-
-    ctx.fillStyle = "#fff7d1";
-    ctx.fillRect(x * TILE + 14, y * TILE + 14, 5, 5);
-
-    ctx.fillStyle = "#397c50";
-    ctx.fillRect(x * TILE + 15, y * TILE + 19, 3, 6);
-  });
-
-  // Recuerdos que hay que encontrar
-  memories.forEach(memory => {
-    if (!collected.has(memory.id)) {
-      ctx.font = "22px serif";
-      ctx.textAlign = "center";
-      ctx.fillText(
-        memory.emoji,
-        memory.x * TILE + 16,
-        memory.y * TILE + 25
-      );
+    // Caminos de tierra
+    for (let x = 2; x <= 17; x++) {
+      ctx.fillStyle = "#c9a477";
+      ctx.fillRect(x * TILE + 5, 7 * TILE + 9, 22, 15);
     }
-  });
 
-  // Isis
-  drawGirl(isis.x, isis.y);
+    for (let y = 2; y <= 12; y++) {
+      ctx.fillStyle = "#c9a477";
+      ctx.fillRect(9 * TILE + 5, y * TILE + 9, 22, 15);
+    }
 
-  // Portal final
-  if (collected.size === memories.length) {
-    ctx.fillStyle = "#ff7ac5";
-    ctx.fillRect(17 * TILE + 4, 12 * TILE + 3, 24, 27);
+    // Flores
+    const flowers = [
+      [2, 5, "#ff8fba"],
+      [5, 3, "#fff0a6"],
+      [7, 9, "#f5a6e8"],
+      [12, 2, "#fff0a6"],
+      [17, 5, "#ff8fba"],
+      [6, 12, "#fff0a6"],
+      [12, 12, "#f5a6e8"],
+      [15, 8, "#ff8fba"],
+      [3, 13, "#fff0a6"]
+    ];
 
-    ctx.fillStyle = "#fff0fa";
-    ctx.fillRect(17 * TILE + 10, 12 * TILE + 9, 12, 15);
+    flowers.forEach(([x, y, color]) => {
+      ctx.fillStyle = color;
+      ctx.fillRect(x * TILE + 9, y * TILE + 10, 5, 5);
+      ctx.fillRect(x * TILE + 18, y * TILE + 10, 5, 5);
+
+      ctx.fillStyle = "#fff7d1";
+      ctx.fillRect(x * TILE + 14, y * TILE + 14, 5, 5);
+
+      ctx.fillStyle = "#397c50";
+      ctx.fillRect(x * TILE + 15, y * TILE + 19, 3, 6);
+    });
+
+    // Recuerdos
+    memories.forEach(memory => {
+      if (!collected.has(memory.id)) {
+        ctx.font = "22px serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          memory.emoji,
+          memory.x * TILE + 16,
+          memory.y * TILE + 25
+        );
+      }
+    });
+
+    // Isis
+    drawGirl(isis.x, isis.y);
+
+    // Portal final
+    if (collected.size === memories.length) {
+      ctx.fillStyle = "#ff7ac5";
+      ctx.fillRect(17 * TILE + 4, 12 * TILE + 3, 24, 27);
+
+      ctx.fillStyle = "#fff0fa";
+      ctx.fillRect(17 * TILE + 10, 12 * TILE + 9, 12, 15);
+    }
+
+    // Iker
+    drawBoy(player.x, player.y);
   }
-
-  // Iker
-  drawBoy(player.x, player.y);
-}
-
 
   function showDialogue(title, text, callback) {
     dialogueTitle.textContent = title;
@@ -367,10 +380,11 @@ function drawWorld() {
     gameStarted = true;
     player.x = 2;
     player.y = 2;
+
     playerAnimation.direction = "down";
     playerAnimation.frame = 0;
-    collected.clear();
 
+    collected.clear();
     updateCounter();
 
     startScreen.hidden = true;
